@@ -229,7 +229,7 @@ class ApiJobQueue(QObject):
         self.download_file_thread.started.connect(self.download_file_queue.process)
 
         self.main_thread.finished.connect(self.main_queue.clear)
-        self.download_file_thread.finished.connect(self.main_queue.clear)
+        self.download_file_thread.finished.connect(self.download_file_queue.clear)
 
         self.main_queue.paused.connect(self.on_main_queue_paused)
         self.download_file_queue.paused.connect(self.on_file_download_queue_paused)
