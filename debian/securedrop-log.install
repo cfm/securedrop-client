@@ -1,0 +1,4 @@
+log/log_client_files/sd-rsyslog usr/sbin/
+log/log_client_files/sdlog.conf etc/rsyslog.d/
+log/log_client_files/sd-rsyslog.conf etc/
+log/securedrop.Log etc/qubes-rpc/

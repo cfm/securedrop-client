@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "securedrop-proxy"
+version = "0.1.0"
+description = "Qubes RPC proxy service for the SecureDrop Client"
+authors = ["SecureDrop Team"]
+license = "GPLv3+"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.1"
+pytest-httpbin = "^2.0.0"

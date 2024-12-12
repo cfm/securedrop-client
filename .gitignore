@@ -1,3 +1,6 @@
+# Doxygen output from "make docs"
+docs/
+
 *.sqlite
 
 # Byte-compiled / optimized / DLL files
@@ -53,7 +56,8 @@ coverage.xml
 .pytest_cache/
 
 # Translations
-*.mo
+*.po-e
+*.pot-e
 
 # Django stuff:
 *.log
@@ -89,6 +93,8 @@ celerybeat-schedule
 .env
 .venv
 .venv-debian
+.venv39
+.venv310
 env/
 venv/
 ENV/
