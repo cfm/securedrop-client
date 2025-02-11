@@ -1,0 +1,116 @@
+name: Tests
+on:
+  - merge_group
+  - push
+  - pull_request
+
+# Only build for latest push/PR unless it's main or release/
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && !startsWith( github.ref, 'refs/heads/release/' ) && !startsWith( github.ref, 'refs/heads/gh-readonly-queue/' ) }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Run `make test` against all components but client, which is special
+  component:
+    strategy:
+      fail-fast: false
+      matrix:
+        # qubesdb-tools has no test suite because it can only usefully be tested
+        # in `securedrop-workstation`'s CI.
+        component:
+          - export
+          - keyring
+          - log
+          - proxy
+        debian_version:
+          - bookworm
+    runs-on: ubuntu-latest
+    container: debian:${{ matrix.debian_version }}
+    steps:
+      - run: |
+          apt-get update && apt-get install --yes git make gnupg sudo python3-poetry
+      - name: Setup user
+        run: |
+          # We want to run tests as a regular user, similar to Qubes VMs
+          useradd --create-home --shell /bin/bash user
+      - name: Install Rust-specific dependencies
+        run: apt-get install --yes build-essential curl libssl-dev pkg-config
+        if: ${{ matrix.component == 'proxy' }}
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # Install Rust, keep in sync with rust-toolchain.toml
+      - uses: dtolnay/rust-toolchain@1.84.1
+        if: ${{ matrix.component == 'proxy' }}
+      - name: Install dependencies
+        run: |
+          if [[ "${{ matrix.component }}" == "export" ]]; then
+            make -C ${{ matrix.component }} ci-install-deps
+          fi
+          sudo -u user poetry -C ${{ matrix.component }} install
+      - name: Run test
+        run: |
+          sudo chown -R user:user .
+          sudo -u user PATH=$PATH:$HOME/.cargo/bin make -C ${{ matrix.component }} test
+
+  # Run the various `make test-...` commands for the client.
+  # TODO: these should be consolidated into one when feasible
+  client:
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - test-functional
+          - test-integration
+          - test-random
+        debian_version:
+          - bookworm
+    runs-on: ubuntu-latest
+    container: debian:${{ matrix.debian_version }}
+    steps:
+      - run: |
+          apt-get update && apt-get install --yes git make gnupg sudo python3-poetry
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup user
+        run: |
+          # We want to run tests as a regular user, similar to Qubes VMs
+          useradd --create-home --shell /bin/bash user
+          sudo -u user bash -c "mkdir ~/Downloads"
+      - name: Install dependencies
+        run: |
+          make -C client ci-install-deps
+          sudo -u user poetry -C client install
+      - name: Run test
+        run: |
+          sudo chown -R user:user .
+          sudo -u user make -C client ${{ matrix.command }}
+
+  # Run the client i18n/l10n checks.
+  internationalization:
+    strategy:
+      matrix:
+        debian_version:
+          - bookworm
+    runs-on: ubuntu-latest
+    container: debian:${{ matrix.debian_version }}
+    steps:
+      - run: |
+          apt-get update && apt-get install --yes git make python3-poetry
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          poetry -C client install
+          make -C client ci-install-deps
+          git config --global --add safe.directory '*'
+      - name: Check that source strings are updated
+        run: make -C client check-strings
+      - name: Check that translation machine objects are reproducible
+        run: make -C client verify-mo

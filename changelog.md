@@ -1,333 +1,148 @@
 # Changelog
 
-## 0.5.0
-* Support deletion of conversations (#1263)
-* Speed up deletion of accounts and conversations (#1273)
-* Update securedrop-sdk version to 0.3.0 (#1274)
-* Tighten file permissions (#1256)
-* Fix bug that exports twice on Enter (#1241)
-* Scale left pane background image (#1210)
+## 0.14.0
 
-## 0.4.1
+* Add support for selecting and deleting multiple sources (#2208, #2188, #2230, #2252, #2293, #2299, #2300)
+* Use builtin `venv` module instead of `virtualenv` (#2246)
+* Improve logging of API failures (#2245)
+* Improve client keyboard shortcuts handling (#2209)
+* Fix client crash when a source with an in-progress download is deleted (#2217)
+* Improve exception handling for download failures (#2275, #2276)
+* Add French language support (#2283)
+* Updated multiple dependencies (#2253, #2267, #2214, #2210, #2211)
 
-* Prevent path traversal in downloaded files (#1226)
-* Scale source list, preview and conversation view on resize (#1211, #1206)
-* (Dev) Add semgrep for static analysis, including an initial ruleset (#1226)
-* (Dev) Remove obsolete MIME setup in run.sh (#1215)
-* (Dev) Switch to using reproducibly built wheels (#1203)
-* (Dev) Update development dependencies (#1208, #1222)
-* (Docs) Incorporate Code of Conduct updates (#1216) 
+* Internal and development
+  * Switch securedrop-client package Architecture to "any" (#2178)
+  * Have `run.sh` automatically emit full debug logs (#2198)
+  * Have `make build-debs` print tag signature, if any (#2205)
+  * Upgrade Rust toolchain to 1.81.0 (#2215)
+  * Fixes to SD test cassettes (#2225)
+  * Re-enable `ruff` for files in proxy/ (#2234)
+  * Don't have CI cancel GitHub merge queue jobs (#2235)
+  * Updated multiple dependencies (#2280, #2181, #2183)
 
-## 0.4.0
+## 0.13.2
 
-* Support read/unread and track who sees a file, message, or reply (#1165)
-* No longer expire source test key (#1180)
-* Restyle source widgets and source selection indicators (#1191)
-* No longer maximize client window if it's already open on login (#1192)
-* Update securedrop-sdk version to 0.2.0 (#1172)
-* (Dev) update macOS development requirements (#1183)
+* Don't let Range header persist into other requests (#2195)
+* Have BaseErrors trigger DownloadDecryptionException in download flow (#2196)
 
-## 0.3.0
+## 0.13.1
 
-* Add sender badge to replies (#1142)
-* Elide source designations at lower width (#1145)
-* Correctly display client maximum window size in Qubes (#1130)
-* Preview only the most recent message/file/reply (#1131)
-* Fix styling for reply decryption errors (#1151)
-* Update reply sender during a sync (#1137)
-* Update info about the current user during a sync (#1135)
-* Fix foreign key for reply attribution (#1147, #1184)
-* Add DB migration testing and update incorrect foreign keys (#1162)
-* Update requests and urllib3 requirements (#1155)
-* Disable client and vault config in VMs other than sd-app (#1153)
-* Enforce AppArmor profile in postinst (#1159)
-* Remove MIME type associations from package (#1160)
-* (Dev) Move requirements file to new directory (#1128)
-* (Dev) Make functional test cassettes work in any order (#1138)
-* (Dev) No longer expire test key (#1180)
-* (Docs) Remove recommendation to merge migrations (#1161)
-* (Docs) Updated documentation for running tests (#1144)
-* (Docs) Incorporate Code of Conduct updates (#1136)
+* Ensure accurate mimetype detection of Office files, add additional sample files to integration tests (#2184)
+* Support direct printing of image types supported by `cups` (#2174)
+* Broaden printing support to all filetypes supported by LibreOffice (#2166)
+* Display an error message if user tries to print an unprintable file type (#2166)
+* Use single PrintDialog GUI element for all print actions (#2143)
+* Remove unused `_from_string` methods from SDK (#2144)
+* Update build toolchain and `setuptools` for CVE-2024-6345 (#2136, [securedrop-builder#501](https://github.com/freedomofpress/securedrop-builder/pull/501))
+* Update `ruff` to 0.5.4 (#2138)
 
-## 0.2.1
+## 0.12.0
 
-* Reformat the code with black and isort (#1115)
-* Support multi-source deletions in one sync (#1114)
-* Support more screen resolutions (#1103)
-* Move CSS strings to CSS files and add new CSS tests (#1082)
-* Prevent addition of duplicated API jobs (#975)
+* Support viewing .heic and .avif files (#2110)
+* Fix printing of Office documents requiring conversion to PDF (#2119)
+* Show error details on Error screen of Export Wizard (#2098)
+* Improve Export Wizard handling of button presses (#1926)
+* Add hover state and animation to Print dialog buttons (#2125)
+* Upgrade `openssl` Rust crate to 0.10.66 for RUSTSEC-2024-0357 (#2131)
 
-## 0.2.0
 
-* Improve error handling when conversation items fail to decrypt (#1059).
-* Enable copy/paste in SpeechBubble (#1063).
-* Clear clipboard after login (#1071).
-* Disable context menu on SpeechBubble (#1065).
-* Rely on SDK default for most requests (#1056).
-* Increase metadata sync timeout (#1055).
-* Minimize number of database queries during sync (#1037, #1036).
-* Defer source key import until reply (#1035).
-* Speed up update_replies (#1046).
-* Download items for most recently active sources first (#1043).
-* Align source name and preview (#1044).
-* Align file name and print button (#1045).
-* Add utils.chronometer for measuring block execution time (#1034).
-* Log intended folders instead of empty strings (#1069).
-* Use looping animation for metadata sync (#1057).
-* Use securedrop-sdk version 0.1.0 (#1076).
-* Update PyYAML to 5.3.1 (#1041).
-* Use pytest fixtures for functional tests (#1067).
-* Bugfix: Remove leading and trailing whitespace from messages (#1058).
+## 0.11.0
 
-## 0.1.6
+This is the first release solely targeting Debian Bookworm. New features in the securedrop-client codebases will be available on Bookworm and Qubes 4.2 only.
 
-* Fix truncation and alignment issues in conversation view (#1029).
+* Support Qubes 4.2 and Debian Bookworm, drop 4.1 and Bullseye support (#1958)
+* Automatically resume failed downloads (#2006)
+* Update AppArmor `__pycache__` rules for Python 3.11 (#2000, #2010)
+* Implement proxy v2 in Rust (#1718, #2017, #2031, #2039, #2015)
+* Make sd-proxy VM disposable (#2033)
+* Update release signing key expiry date to May 2027 (#2036)
+* Allow nautilus to have RWX memory (#2060)
+* Fix print preflight status check (#2102)
+* Open `.webm` videos in Totem (#2106)
 
-## 0.1.5
+* Provisioning:
+  * Install debian package requirements via sdw-config metapackage (#1957, #1967)
+  * Provision deb822-style apt sources list (#1952)
+  * Use QubesDB to configure VM-specific settings (#1883, #2034)
+  * Use systemd and Qubes services to conditionally provision VMs (#1677, #2033)
+  * Configure Journalist Interface auth credentials via QubesDB (#2032, #2051, #2056, #2058)
+  * Use bash for all Debian packaging scripts (#1927)
 
-* Update source list ordering when conversation is updated (#1013).
-* Do not show tooltips on short strings (#1016).
+* Internal and development:
+  * Remove the pre-commit hook for make check-strings (#1896)
+  * Display package hashes after successful build (#1898)
+  * Exclude client version string from Project-Id-Version of .pot files (#1915)
+  * Exclude root project .venv from bandit (#1918)
+  * Run tests as not-root (#1919)
+  * Automatically collect package build log (#1923)
+  * Use ruff for linting and formatting checks (#1885, #1944)
+  * Push "nightly" after each merged PR (#1960)
+  * Update readme to reference python3.11 (#1969)
+  * Install xfce4-terminal in all VMs for debugging (#2013)
+  * Exclude Babel header from i18n diff in make check-strings (#2054, #2065)
+  * Reorganize securedrop-log code to clearly split server and client (#1677)
+  * Clean up unused securedrop-log code (#2014, #2042)
+  * Document architecture of securedrop-log component (#1995)
+  * Update most development dependencies to their latest versions
+  * Add QubesDB and locally built packages to piuparts (#2032, #2034)
 
-## 0.1.4
 
-* Use `--view-only` when opening files in a DVM, update `mimeapps.list` (#972).
-* Add user icon to clickable area for logout (#976).
-* Animate active state on frameless dialog boxes (#940).
-* String updates to print/export dialogs (#968).
-* Automatically resize status bar to width of error message string (#977).
-* Clean up cleanup in run.sh (#949).
-* Make `LoginDialog` a modal (#978).
-* Make `ExportDialog`, `PrintDialog` modals (#970).
-* Switch button order in `ExportDialog`, `PrintDialog` (#989).
-* Focus passphrase field in `ExportDialog` (#994).
-* Disable cancel button before exporting a file (#1011).
-* Ensure logging does not log sensitive info (#965).
-* Reset source pending status upon unexpected error when deleting sources (#979).
-* Fix star hover state (#1003).
-* No longer show drafts in preview snippets (#1002).
-* No longer access source database object in snippet (#964).
-* Resolve blocked UI on client start for a large number of sources (#944).
-* Add functional tests (#788, #957, #983, #1001).
-* Bug fix: Show pending deletion status right after deletion job enqueued (#955).
-* Bug fix: Fix starring behavior (#952).
-* Bug fix: Prevent duplicate file downloads at the UI level (#974).
-* Bug fix: Stop selecting a source on sync (#981).
-* Bug fix: Fix horizontal scrollbar in source list (#982).
-* Bug fix: Update filesize after download and decryption (#969).
-* Bug fix: Prevent tooltips on source preview labels (#1006).
+## 0.10.1
+* Fix printing of transcripts. (#1936)
 
-## 0.1.3
+## 0.10.0
 
-* Update login UI messages (#903).
-* Add pending deletion status (#911).
-* Bug fix: Delete conversation in one place (#915).
-* Bug fix: Ensure that we delete individual submissions on disk (#923).
-* Bug fix: Ensure that sources are properly refreshed on sync (#916).
-* Bug fix: Fix word wrap in source (#926).
-* Bug fix: Preview oneline and no longer condense text (#931).
-* Bug fix: Ensure correct StarToggleButton signal handler state (#933).
-* Bug fix: Ensure StarToggleButton hover states honor offline status (#936).
-* Bug fix: Fix conversation refresh and syncing (#937).
-* Bug fix: Fix StarToggleButton hover leave (#941).
-* Bug fix: Make sure snippet is updated on submission deletion (#942).
-* Bug fix: Use the id of the widget, not the db object in get_current_source (#943).
-* Update MarkupSafe to 1.1.1 (#925).
+This is the first release from the merged securedrop-client repository, which now
+contains the securedrop-export, securedrop-log, securedrop-proxy and securedrop-sdk
+codebases. See our [blog post](https://securedrop.org/news/consolidating-securedrop-workstations-git-repositories-to-make-development-easier/) for more details.
+All components now use the same version number, previous changelogs can be found in each
+component's subfolder.
 
-## 0.1.2
+* VeraCrypt-encrypted USB drives are now supported for export. (#1777, #1908)
+* Don't ask for a passphrase if the device is already unlocked ([securedrop-export#105](https://github.com/freedomofpress/securedrop-export/pull/105), #1777)
+* Ensure all print jobs have been fully enqueued ([securedrop-export#105](https://github.com/freedomofpress/securedrop-export/pull/105))
+* Cleanup `metadata.json` from sd-devices after exporting ([securedrop-export#105](https://github.com/freedomofpress/securedrop-export/pull/105))
+* Add status code and error for multiple attached devices ([securedrop-export#105](https://github.com/freedomofpress/securedrop-export/pull/105))
+* Improve detail in error messages when exporting fails and log them (#1777)
+* Add spinner and active state in "Insert Encrypted Drive" dialog (#1019, #1777)
+* Consistently transition to "Ready to export" state (#990, #1777)
+* Fix typos in messages (#1651)
+* Fix homepage URL in setup.py (#1662)
+* Remove obsolete gvfs-bin dependency from securedrop-workstation-viewer (#1842)
+* Make files exported to USBs world readable (#1872, #1917)
+* Update translations from Weblate (#1548, #1747)
+* Add `.rtf` printing support ([securedrop-export#109](https://github.com/freedomofpress/securedrop-export/pull/109))
 
- * Update branding bar artwork (#871).
- * Remove "downloading file" message in sync area (#881).
- * Bug fix: Only force login when we're not already logged out (#884).
- * Bug fix: Retry source deletion jobs (#879).
- * Bug fix: Enter no longer closes print and export dialogs (#855).
- * Bug fix: Ensure that ReplyBox is updated after client gets source key (#864).
- * Bug fix: Ensure that we delete source collection when source is deleted (#866).
- * Bug fix: Ensure that we delete Python wrappers for deleted items (#887, #890, #898).
+* Dependencies:
+  * Update requests to 2.31.0
+  * Update certifi to 2023.7.22
+  * Update jinja2 to 3.1.3
 
-## 0.1.1
-
-  * Implement export/print UI design and behavior (#666).
-  * Update sync method names and message (#817).
-  * Bug fix: Ensure replies are in order (#829).
-  * Bug fix: Do not mark replies as failed if they time out (#819).
-  * Bug fix: If source is deleted during sync, do not add its messages (#832).
-  * Provide clear message in case of no keypair (#830).
-  * Bug fix: Ensure messages word wrap (#838).
-  * Show a short notifications when messages are about to download (#822).
-  * Standardize connection errors (#823).
-  * Bug fix: Fix reply succeeds but shows up as failed (#837).
-  * Bug fix: Ensure UI updates if local copy of file is no longer available (#842).
-  * Bug fix: Work around stylesheet issue causing replies to show as pending when confirmed (#831).
-
-## 0.1.0
-
-  * Update file download animation (#731).
-  * Update conversation view inline (#688).
-  * When token is invalid, user must log back in (#750).
-  * Ensure UI stays responsive at all times when syncing with server (#733).
-  * Update conversation view on login (#748).
-  * Improve download file handling (#737).
-  * Show warning if source has no public key (#759).
-  * No longer sync after sending a reply (#722).
-  * Update gui instead of sync when a file is missing (#724).
-  * Revert usage of subprocess.check_output text parameter (#755).
-  * Update obselete original_filename usage in file_ready (#773).
-  * Don't import source keys we already have (#749).
-  * Make sync continuous (#739).
-  * Remove shadow on sign in button (#763).
-  * Add cursor styles and active states (#675).
-  * Move auth checks into decorator (#780).
-  * Only resume if queue thread is running (#787).
-  * Refactor queue resume/stop/start (#786).
-  * Improve efficiency of source key management (#793).
-  * Use ServerConnectionError from securedrop-sdk 0.0.13 (#784).
-  * Only show last refresh if not logged in or network problems (#790).
-  * Bug fix: Reset remaining attempts for each sync (#783).
-  * Bug fix: Resolve potential crasher in queue (#744).
-  * Bug fix: Ensure snippets update (#752).
-  * Bug fix: Ensure that ReplyBox doesn't lose focus on sync (#740).
-  * Bug fix: Ensure drafts are displayed when clicking between sources (#764).
-  * Bug fix: Update slots and signals to match (#772).
-  * Bug fix: Fix mkdir permission in AppArmor profile (#777).
-  * Bug fix: Update source timestamp in UI (#778).
-  * Bug fix: Fix CI due to virtualenv 20.0 installation (#794).
-
-## 0.0.13
-
-  * remove user refresh and replace with sync icon (#732)
-  * build-requirements: update for production beta (#730)
-  * No sync on ui operations (#721)
-  * Use SecureQLabel for message previews (#720)
-  * Show DD MMM format for source title (#719)
-  * Add new metadata queue. (#715)
-  * Improve performance of storage.get_remote_data (#709)
-  * app/queue: prioritize user-triggered state changes (#708)
-  * Fix HTML entities being escaped in speech bubbles. (#703)
-  * Activity indicator for file download / decryption. (#702)
-  * Rename VMs (#701)
-
-## 0.0.12
-
-  * Use revised VM names `sd-app` (was `sd-svs`), `sd-devices`
-    (was `sd-export-usb`) and `sd-viewer` (was `sd-svs-disp`) throughout
-    the application. Part of a workstation-wide VM rename operation described
-    in https://github.com/freedomofpress/securedrop-workstation/issues/285
-  * Delete sources using the general queue (#402)
-  * Add a preview snippet for sources (#135)
-  * Add a show/hide password feature on the login screen (#659)
-  * Disable sync icon during active sync (#388)
-  * Add keyboard shortcuts for sending replies (#606)
-  * Add hover states for UI elements (#591)
-
-## 0.0.11
-
-  * Add apparmor profile (#673)
-  * Add failure message for replies (#664)
-  * Move metadata sync to api queue (#640)
-  * Add print integration (#631)
-  * Populate source list immediately upon login (#626)
-
-## 0.0.10
-
-  * Add Python 3.7/buster support (#568, #609)
-  * Add export to USB support (#611, #547, #562, #563, #564)
-  * Retry failed replies (#530)
-  * Pause queue on auth errors, connection failures, and timeouts (#531)
-  * Add pending reply status, persist replies in the database (#578)
-  * Set realistic timeouts, scale file/message download timeouts using file size (#515, #567)
-  * Update qrexec keyword prefix characters (#537)
-  * Reply box no longer accepts rich text input (#580)
-  * Format reply box placeholder text (#597)
-  * Redesign FileWidget (#535)
-  * Style conversation header (#543)
-  * Login form submits if user presses Enter or Return (#615)
-  * Enable changeable log levels (#603)
-  * Remove borders around source list, send icon, and reply box (#505)
-  * Move star and date in source widget (#506)
-  * Polish source widget (#522)
-  * Polish offline UI (#586)
-  * Add branding image to left pane and polish styling (#520)
-  * Add empty conversation view (#510)
-  * Update fonts weights and colors (#502)
-  * Bugfix: handle missing files during export and open (#566)
-  * Bugfix: do not escape quotes in SecureQLabel (#516)
-  * Bugfix: skip round trip to user endpoint during logic (#605, #621, #623)
-  * Bugfix: fix bug of sources disappearing from source list (#620)
-  * Bugfix: fix db warnings upon source deletion (#581)
-  * Add more detailed developer documentation (#508)
-  * Add documentation for updating dependencies (#536)
-  * Ensure build/dev requirements files stay in sync (#602)
-  * Parallelize test suite (#569)
-  * Ignore third-party deprecation warnings (#576)
-  * Add bandit to check target (#548)
-
-## 0.0.9
-
-  * Use Montserrat and Source Sans Pro (#493)
-  * Same BG for scrollarea, conversation view, selected source (#494,#496)
-  * Supports opening submissions in DispVMs from Qubes dev env (#490)
-  * Center all popup windows (#487)
-  * Use priority queue for job processing (#486)
-  * Use SecureQLabel (#485)
-  * Extract and display original document filenames (#452)
-  * Save in-progress replies via persisting SourceConversationWrapper (#431)
-
-## 0.0.8
-
-  * Update SDK to 0.0.10, urllib to 1.24.3, and SQLAlchemy to 1.3.3 (#424)
-  * Remove pipenv in favor of pip-tools (#372)
-
-## 0.0.7
-
-  * Update securedrop-sdk to 0.0.8 (#357)
-
-## 0.0.6
-
-  * Long lived threads are now de-authenticated on logout (#179)
-  * updated requirements based on newly built wheels (#177)
-  * Application no longer crashes when source collection is deleted on web
-    interface (#176)
-  * Improved input validation for login panel (#169)
-  * Delete submissions on disk when deleted from server (#168)
-  * Escape HTML in messages (#164)
-  * Source list displayed by last_updated value (#158)
-  * Show attachment icon when document count is greater than zero (#157)
-  * Disable refresh when API call in progress (#154)
-  * Fix crash in offline mode (#150)
-  * Developer environment fixes (#148, #149, #152)
-
-## 0.0.5-1
-
-  * Package updated to apt-test-qubes did not include securedrop-sdk 0.4
-
-## 0.0.5
-
-  * Standardize dev env (#145)
-  * Update securedrop-proxy to 0.0.4
-
-## 0.0.4
-
-  * Adds .desktop shortcut.
-
-## 0.0.3
-
-  * Fix and squash migrations (#129).
-  * Don't hide two factor code while typing (#131).
-  * Remove placeholder text from source list (#134).
-
-## 0.0.2-1
-
-  * Resolves venv paths in generated scripts (via dh-virtualenv)
-
-## 0.0.2
-
-  * Enable decryption and viewing of replies (#114).
-  * Enable decryption and viewing of messages (#99).
-  * Enable decryption and opening of files in a DispVM (#113).
-  * Add status bar on bottom of application (#65).
-  * Prevent concurrent application launches (#54).
-  * Enable starring/unstarring of sources (#50).
-
-## 0.0.1
-
-  * Initial release.
+* Internal and development:
+  * Fix syntax of mypy comments (#1646)
+  * Pull out string "transcript.txt" into a constant (#1658)
+  * Restore workaround for segmentation faults in tests (#1656)
+  * Auto-detect Wayland in run.sh developer environment (#1653)
+  * Verify gettext machine objects (`.mo`s) are reproducible (#1666)
+  * Migrate dependency management to poetry (#1671)
+  * Enable dependabot for Python and GitHub Actions (#1768, #1782, #1824, #1830)
+  * Move and refactor debian/ packaging files from securedrop-builder (#1741)
+  * Use `--require-hashes` when installing dependencies during package build (#1792)
+  * Lint `.desktop` files in CI (#1783)
+  * Apply bandit and safety linting to all components in one place (#1814)
+  * Add initial configuration for Rust components (#1817, #1818)
+  * Standardize `make lint` in all components (#1841)
+  * Move remaining CircleCI jobs over to GitHub Actions (#1841)
+  * Apply black and isort formatting to all components in one place (#1860)
+  * Add shellcheck linting (#1843)
+  * Stop using deprecated pkg_resources (#1851)
+  * Have CI run piuparts (#1844)
+  * Use dh_apparmor for installing the profile (#1856)
+  * Use setuptools.find_packages() in setup.py (#1873)
+  * Parameterize sender_is_current_user in test instead of randomization (#1884)
+  * Stop running client tests in parallel with pytest-xdist (#1881)
+  * Run lintian on Debian packages (#1845)
+  * Run CI as a non-root user. (#1919)
+  * Remove __pycache__ folders from packages. (#1909)
+  * Remove specific version from .pot files. (#1915)

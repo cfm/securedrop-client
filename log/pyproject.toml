@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "securedrop-log"
+version = "0.0.0"
+description = "SecureDrop Qubes logging scripts"
+authors = ["SecureDrop Team"]
+license = "GPLv3+"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+redis = "=3.3.11"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.4.1"
+types-redis = "<5"
+types-setuptools = ">=68,<76"
+
+[tool.mypy]
+python_version = "3.11"
+scripts_are_modules = true
+files = [
+    "*.py",
+    "log_server/log_saver.py",
+    "log_server/redis_log.py",
+]
