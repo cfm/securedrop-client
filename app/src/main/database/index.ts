@@ -130,7 +130,7 @@ export class DB {
       "SELECT uuid, version FROM items",
     );
     this.selectItemFilenameSource = this.db.prepare(
-      "SELECT filename, source_uuid FROM items WHERE source_uuid = @uuid",
+      "SELECT filename, source_uuid FROM items WHERE uuid = @uuid",
     );
     this.upsertItem = this.db.prepare(
       "INSERT INTO items (uuid, data, version) VALUES (@uuid, @data, @version) ON CONFLICT(uuid) DO UPDATE SET data=@data, version=@version",
