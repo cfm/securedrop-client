@@ -4,6 +4,7 @@ import path from "path";
 import { execSync } from "child_process";
 import Database, { Statement } from "better-sqlite3";
 import blake from "blakejs";
+import { Snowflake } from "@sapphire/snowflake";
 
 import {
   Index,
@@ -18,6 +19,7 @@ import {
   Journalist,
   JournalistRow,
   FetchStatus,
+  PendingEventType,
 } from "../../types";
 
 interface KeyObject {
@@ -91,6 +93,21 @@ export class DB {
   private selectItemsBySourceId: Statement<[string], ItemRow>;
   private selectAllJournalists: Statement<[], JournalistRow>;
 
+  private insertSourcePendingEvent: Statement<
+    { snowflake_id: bigint; source_uuid: string; type: number },
+    void
+  >;
+  private insertItemPendingEvent: Statement<
+    {
+      snowflake_id: bigint;
+      item_uuid: string;
+      type: number;
+      reply_text: string;
+      reply_source_uuid: string;
+    },
+    void
+  >;
+
   constructor() {
     // Ensure the directory exists
     const dbDir = path.join(os.homedir(), ".config", "SecureDrop");
@@ -130,7 +147,7 @@ export class DB {
       "SELECT uuid, version FROM items",
     );
     this.selectItemFilenameSource = this.db.prepare(
-      "SELECT filename, source_uuid FROM items WHERE source_uuid = @uuid",
+      "SELECT filename, source_uuid FROM items_projected WHERE source_uuid = @uuid",
     );
     this.upsertItem = this.db.prepare(
       "INSERT INTO items (uuid, data, version) VALUES (@uuid, @data, @version) ON CONFLICT(uuid) DO UPDATE SET data=@data, version=@version",
@@ -154,18 +171,26 @@ export class DB {
         has_attachment,
         show_message_preview,
         message_preview
-      FROM sources
+      FROM sources_projected
     `);
     this.selectSourceById = this.db.prepare(`
-      SELECT uuid, data FROM sources
+      SELECT uuid, data FROM sources_projected
       WHERE uuid = ?
     `);
     this.selectItemsBySourceId = this.db.prepare(`
-      SELECT uuid, data, plaintext, filename FROM items
+      SELECT uuid, data, plaintext, filename FROM items_projected
       WHERE source_uuid = ?
     `);
     this.selectAllJournalists = this.db.prepare(`
       SELECT uuid, data FROM journalists
+    `);
+
+    this.insertSourcePendingEvent = this.db.prepare(`
+      INSERT INTO pending_events (snowflake_id, source_uuid, type) VALUES (@snowflake_id, @source_uuid, @type)
+    `);
+
+    this.insertItemPendingEvent = this.db.prepare(`
+      INSERT INTO pending_events (snowflake_id, item_uuid, type, reply_text, reply_source_uuid) VALUES(@snowflake_id, @item_uuid, @type, @reply_text, @reply_source_uuid)
     `);
   }
 
@@ -580,5 +605,32 @@ export class DB {
       `UPDATE items SET fetch_status = ${FetchStatus.FailedDecryptionRetryable}, fetch_retry_attempts = fetch_retry_attempts + 1, fetch_last_updated_at = CURRENT_TIMESTAMP WHERE uuid = @uuid`,
     );
     stmt.run({ uuid: itemUuid });
+  }
+
+  addPendingSourceEvent(sourceUuid: string, type: PendingEventType): bigint {
+    const snowflakeID = new Snowflake(Date.now()).generate();
+    this.insertSourcePendingEvent.run({
+      snowflake_id: snowflakeID,
+      source_uuid: sourceUuid,
+      type: type,
+    });
+    return snowflakeID;
+  }
+
+  addPendingItemEvent(
+    itemUuid: string,
+    type: PendingEventType,
+    replyText?: string,
+    replySourceUuid?: string,
+  ): bigint {
+    const snowflakeID = new Snowflake(Date.now()).generate();
+    this.insertItemPendingEvent.run({
+      snowflake_id: snowflakeID,
+      item_uuid: itemUuid,
+      type: type,
+      reply_text: replyText ?? "",
+      reply_source_uuid: replySourceUuid ?? "",
+    });
+    return snowflakeID;
   }
 }

@@ -192,6 +192,17 @@ export enum FetchStatus {
   FailedTerminal = 7,
 }
 
+export enum PendingEventType {
+  Undefined = 0,
+  AddReply = 1,
+  DeleteReply = 2,
+  DeleteSource = 3,
+  DeleteSourceConversation = 4,
+  Star = 5,
+  Unstar = 6,
+  Seen = 7,
+}
+
 /** Fetch Worker types */
 export type FetchDownloadsMessage = {
   authToken: string;
